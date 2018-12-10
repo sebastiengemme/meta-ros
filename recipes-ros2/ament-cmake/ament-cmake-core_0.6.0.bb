@@ -5,4 +5,4 @@ DEPENDS = "ament-package-native ${PYTHON_PN}-pyparsing-native"
 
 include ament-cmake.inc
 
-RDEPENDS_${PN} += "ament-package cmake"
+RDEPENDS_${PN} += "ament-package cmake python-catkin-pkg"

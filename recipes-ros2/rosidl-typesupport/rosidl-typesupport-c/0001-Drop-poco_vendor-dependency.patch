@@ -1,25 +1,38 @@
-From f39a8bd2d8ee244c310a191238c02531ff271399 Mon Sep 17 00:00:00 2001
-From: Dmitry Rozhkov <dmitry.rozhkov@linux.intel.com>
-Date: Tue, 4 Jul 2017 11:30:59 +0300
-Subject: [PATCH] Drop poco_vendor dependency
-
-Upstream-Status: Inappropriate [poco is provided by OE]
----
- rosidl_typesupport_c/CMakeLists.txt | 1 -
- 1 file changed, 1 deletion(-)
-
 diff --git a/rosidl_typesupport_c/CMakeLists.txt b/rosidl_typesupport_c/CMakeLists.txt
-index 887bbb3..4cced24 100644
+index a925dc7..b36309b 100644
 --- a/rosidl_typesupport_c/CMakeLists.txt
 +++ b/rosidl_typesupport_c/CMakeLists.txt
-@@ -17,7 +17,6 @@ endif()
+@@ -16,13 +16,8 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+ endif()
  
- find_package(ament_cmake REQUIRED)
- # provides FindPoco.cmake and Poco on platforms without it
+ find_package(ament_cmake_ros REQUIRED)
+-# provides FindPoco.cmake and Poco on platforms without it
 -find_package(poco_vendor)
- find_package(Poco COMPONENTS Foundation)
+-find_package(Poco COMPONENTS Foundation)
  find_package(rosidl_generator_c REQUIRED)
  
--- 
-2.9.3
-
+-link_directories(${Poco_LIBRARY_DIR})
+-
+ ament_export_dependencies(rosidl_typesupport_interface)
+ 
+ ament_export_include_directories(include)
+@@ -34,19 +29,10 @@ add_library(${PROJECT_NAME}
+   src/message_type_support_dispatch.cpp
+   src/service_type_support_dispatch.cpp
+   src/type_support_dispatch.cpp)
+-if(Poco_FOUND)
+-  target_compile_definitions(${PROJECT_NAME}
+-    PRIVATE "ROSIDL_TYPESUPPORT_C_USE_POCO")
+-endif()
+ if(WIN32)
+   target_compile_definitions(${PROJECT_NAME}
+     PRIVATE "ROSIDL_TYPESUPPORT_C_BUILDING_DLL")
+ endif()
+-target_include_directories(${PROJECT_NAME}
+-  PUBLIC
+-  include ${Poco_INCLUDE_DIRS}
+-)
+-target_link_libraries(${PROJECT_NAME} ${Poco_LIBRARIES})
+ ament_target_dependencies(${PROJECT_NAME} "rosidl_generator_c")
+ ament_export_libraries(${PROJECT_NAME})
+ 
